@@ -1,0 +1,33 @@
+#table {
+    background: rgb(209, 139, 71);
+    border: 1px solid black;
+    width: 500px;
+    height: 500px;
+    float: left;
+    margin: 10px;
+}
+
+#table td {
+    cursor: pointer;
+    border: 1px solid gray;
+    width: 12.5%;
+    height: 12.5%;
+    font-size: 35px;
+    text-align: center;
+}
+
+#table tr:nth-child(odd) td:nth-child(odd) {
+    background: rgb(255, 255, 255);
+}
+
+#table tr:nth-child(even) td:nth-child(even) {
+    background: rgb(255, 255, 255);
+}
+
+#table tr:nth-child(even) td:nth-child(odd) {
+    background: rgb(209, 139, 71);
+}
+
+#table tr:nth-child(odd) td:nth-child(even) {
+    background: rgb(209, 139, 71);
+}
