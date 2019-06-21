@@ -9,8 +9,7 @@ const App = () => {
     // componentDidMount
     return (
     <div>
-        <Board size={2}/>
-        <input name="size" placeholder="Nhập vào 1 số"></input>
+        <Board/>
     </div>)
 }
 

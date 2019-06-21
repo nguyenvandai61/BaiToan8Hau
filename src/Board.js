@@ -1,10 +1,27 @@
 import React from 'react';
 import "./table.css";
 import Game from './Game';
+import SizeInput from './SizeInput';
 
-export default ({ name }) => {
-    const game = new Game();
-    return (
+class Board extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            size: 2
+        }
+        this.setSizeInput = this.setSizeInput.bind(this);
+    }
+    componentDidMount(){
+    }
+
+    setSizeInput(size) {
+        console.log(size);
+        this.setState({size: size});
+    }
+
+    render() {
+        const game = new Game(this.state.size);
+        return (
         <div>
             <table id="table">
                 <tbody>
@@ -14,8 +31,13 @@ export default ({ name }) => {
                         </tr>
                     ))}
                 </tbody>
+
             </table>
+            <SizeInput setSizeInput={this.setSizeInput}/>
         </div>
-    )
+        )
+    }
 }
+
+export default Board;
 
