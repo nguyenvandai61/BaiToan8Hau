@@ -1,40 +1,54 @@
 import React from 'react';
 import "./table.css";
-import Game from './Game';
 import SizeInput from './SizeInput';
 
-class Board extends React.Component{
+class Board extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            size: 2
+            size: 8,
+            board: []
         }
         this.setSizeInput = this.setSizeInput.bind(this);
+        this.generateBoard = this.generateBoard.bind(this);
     }
-    componentDidMount(){
+    componentWillMount() {
+        console.log(this);
+        this.generateBoard(this.state.board, this.state.size);
     }
-
     setSizeInput(size) {
-        console.log(size);
-        this.setState({size: size});
+        const board = [];
+        this.generateBoard(board, size);
+        this.setState({ size: size, board: board });
+        console.log(this);
+    }
+    
+    generateBoard(board, n) {
+        for (var i = 0; i < n; i++) {
+            const row = [];
+            for (var j = 0; j < n; j++) {
+                row.push(0);
+            }
+            board.push(row);
+        }
+        return board;
     }
 
     render() {
-        const game = new Game(this.state.size);
         return (
-        <div>
-            <table id="table">
-                <tbody>
-                    {game.board.map((rank, i) => (
-                        <tr key={i}>
-                            {rank.map((piece, j) => <td key={j}>C</td>)}
-                        </tr>
-                    ))}
-                </tbody>
+            <div>
+                <table id="table">
+                    <tbody>
+                        {this.state.board.map((rank, i) => (
+                            <tr key={i}>
+                                {rank.map((piece, j) => <td key={j}>{piece}</td>)}
+                            </tr>
+                        ))}
+                    </tbody>
 
-            </table>
-            <SizeInput setSizeInput={this.setSizeInput}/>
-        </div>
+                </table>
+                <SizeInput setSizeInput={this.setSizeInput} />
+            </div>
         )
     }
 }
