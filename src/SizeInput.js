@@ -34,6 +34,7 @@ export default class SizeInput extends React.Component {
             <div>
                 <form>
                     <input type="number" name="size" placeholder="Nhập vào 1 số" onChange={this.onChangeSize}></input>
+                    <button type="button" onClick={this.nextModel}>Next Model</button>
                     <button type="submit" onClick={this.handleClick}>Submit</button>
                 </form>
             </div>

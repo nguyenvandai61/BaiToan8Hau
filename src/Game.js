@@ -43,6 +43,8 @@ function isSafe(board, row, col, n) {
 
     return true;
 }
+
+
 function printSolution(board, n) {
     for (var i = 0; i < n; i++) {
         for (var j = 0; j < n; j++) {
@@ -56,8 +58,6 @@ function printSolution(board, n) {
 
 function recurseNQ(board, col, n) {
     if (col === n) {
-        debugger;
-        setTimeout(
         printSolution(board, n), 3000);
         return;
     }
