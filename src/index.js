@@ -1,7 +1,7 @@
 import React from "react";
 import {render} from "react-dom";
 import "./table.css";
-import Board from "./Board";
+import Board from "./components/Board";
 import registerServiceWorker from "./registerServiceWorker";
 
 

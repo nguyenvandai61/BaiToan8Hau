@@ -1,41 +1,46 @@
 import React from 'react';
-import "./table.css";
+import "../table.css";
 import SizeInput from './SizeInput';
+import TextInfo from './TextInfo';
+import PropTypes from 'prop-types';
 
 class Board extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            size: 6,
-            board: []
+            size: 3, 
+            state: 0,
+            res: [],
         }
         this.setSizeInput = this.setSizeInput.bind(this);
         this.generateBoard = this.generateBoard.bind(this);
-        this.setBoard = this.setBoard.bind(this);
         this.recurseNQ = this.recurseNQ.bind(this);
+        this.addRes = this.addRes.bind(this);
         this.isSafe = this.isSafe.bind(this);
+        this.handleGetState = this.handleGetState.bind(this);
+        this.handleChangeSize = this.handleChangeSize.bind(this);
     }
     componentWillMount() {
         console.log('will mount');
-        this.generateBoard(this.state.board, this.state.size);
-        const board =[];
-        Object.assign(board, this.state.board);
+        let board = this.generateBoard(this.state.size);
         this.recurseNQ(board, 0, this.state.size);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        console.log("check should component update");
-        
-        return true;
-    }
     componentWillUpdate() {
         console.log("Component will update");
+        console.log(this.state);
     }
     setSizeInput(size) {
-        const board = [];
-        this.generateBoard(board, size);
-        this.recurseNQ(board, 0, size);
+        // Clear array res
+        let newRes = this.state.res;
+        
+        newRes.splice(0, this.state.res.length);
         this.setState({size: size});
+        
+        this.setState({res: newRes, state: 0});
+
+        let board = this.generateBoard(size);
+        this.recurseNQ(board, 0, size);
     }
     printSolution(board, n) {
 
@@ -49,8 +54,11 @@ class Board extends React.Component {
     }
 
     recurseNQ(board, col, n) {
+        if (n < 4) return;
         if (col === n) {
-            this.setBoard(board);
+            // Push board to res;
+            console.table(board);
+            this.addRes(JSON.stringify(board));
             return;
         }
         
@@ -63,12 +71,25 @@ class Board extends React.Component {
         }
     }
     
-    setBoard(board) { 
-        const newBoard = JSON.parse(JSON.stringify(board));
-        this.setState({board: newBoard });
+    addRes(board) { 
+        console.table(board);
+        let res = this.state.res;
+        let n = res.length;
+        console.log("Number of cases: "+n);
+        res.push((board));
+        this.setState({res: res});
     }
-    isSafe(board, row, col, n) {
 
+
+    handleGetState(e) {
+        let resLen = this.state.res.length;
+        if (resLen == 0) return;
+        let state = resLen === this.state.state+1? 0: this.state.state+1;
+        this.setState({state: state});
+        console.log(this.state);
+    }
+
+    isSafe(board, row, col, n) {
         // Checks the ← direction
         for (var i = 0; i < col; i++) {
             if (board[row][i] === 1) {
@@ -93,21 +114,35 @@ class Board extends React.Component {
         return true;
     }
 
-    generateBoard(board, n) {
-        for (var i = 0; i < n; i++) {
-            const row = [];
-            for (var j = 0; j < n; j++) {
-                row.push(0);
+    handleChangeSize(event) {
+        const value = parseInt(event.target.value);
+        if (!Number.isInteger(value) || value < 0) return;
+        console.log(value);
+        this.setSizeInput(value);
+    }
+
+    generateBoard(n) {
+        let board = new Array(n);
+        for (let i=0; i < n; i++) board[i]= new Array(n);
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+                board[i][j] = 0;
             }
-            board.push(row);
         }
         return board;
     }
 
+
     render() {
         console.log("render");
-        const board = this.state.board;
+        const state = this.state.state;
         const size = this.state.size;
+        const resLen = this.state.res.length;
+        let board = '';
+        if (resLen != 0)
+            board = JSON.parse(this.state.res[state]);
+
+        console.log(board);
         const changeChar = (bool) => {
             return bool? '♕' : ' ';
         }
@@ -126,18 +161,31 @@ class Board extends React.Component {
         }
 
 
+
         return (
             <div>
                 <table id="table">
                     <tbody>
-                        {createTable()}
+                        {board? createTable(): ''}
                     </tbody>
 
                 </table>
-                <SizeInput setSizeInput={this.setSizeInput} />
+                <SizeInput getState={this.handleGetState} 
+                setSizeInput={this.setSizeInput} 
+                changeSize={this.handleChangeSize}
+                />
+                <TextInfo
+                nStates={resLen}
+                state={this.state.state}/>
             </div>
         )
     }
+}
+
+Board.propTypes = {
+    size: PropTypes.number.isRequired,
+    state: PropTypes.number.isRequired,
+    res: PropTypes.array.isRequired
 }
 
 export default Board;
